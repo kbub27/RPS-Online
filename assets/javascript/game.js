@@ -74,5 +74,6 @@ $(document).ready(function () {
         } else if (snap.val().user === 2) {
             player.user2.assigned = false;
         }
-    })
+    });
+
 })
