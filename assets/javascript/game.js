@@ -1,5 +1,5 @@
-$(document).ready(function() {
-      
+$(document).ready(function () {
+
     var config = {
         apiKey: "AIzaSyCq7Y5QgjS7-psjlZh37ycLCe5O86Ul4yE",
         authDomain: "rps-game-da651.firebaseapp.com",
@@ -13,10 +13,16 @@ $(document).ready(function() {
     var database = firebase.database();
     var player = {
         user1: {
-            assigned: false
+            name: '',
+            assigned: false,
+            choice: '',
+            wins: 0
         },
         user2: {
-            assigned: false
+            name: '',
+            assigned: false,
+            choice: '',
+            wins: 0
         }
     };
     var inGame = false;
@@ -25,34 +31,36 @@ $(document).ready(function() {
 
     var connectedRef = database.ref('.info/connected');
 
-    connectedRef.on("value", function(snap) {
+    connectedRef.on("value", function (snap) {
 
-        // If they are connected..
         if (snap.val()) {
-      
-          // Add user to the connections list.
-          var connection = connectionsRef.push(true);
-      
-          // Remove user from the connection list when they disconnect.
-          connection.onDisconnect().remove();
+
+            var connection = connectionsRef.push(true);
+
+            connection.onDisconnect().remove();
         }
     });
 
     connectionsRef.on('value', function (snapshot) {
-            $('#veiwers').text('You have ' + snapshot.numChildren() + ' veiwers watching you play now!');
+        $('#veiwers').text('You have ' + snapshot.numChildren() + ' veiwers watching you play now!');
     });
 
-    function joinGame() {
-        if (player.user1.assigned && player.user2.assigned) {
-            alert('Already two users playing the Game')
-        } else if (player.user1.assigned) {
-            player.user2.assigned = true;
-        } else {
-            player.user1.assigned = true;
-        }
-    };
+    $('.joinGame').on('click', function (event) {
+        event.preventDefault();
 
-    function leaveGame() {
-        
-    }
+        if ($('.playerName').val().trim() !== '' && !(player.user1.assigned && player.user2.assigned)) {
+            if (player.user1.assigned === false) {
+                player.user1.name = $('.playerName').val().trim();
+                player.user1.assigned = true;
+                database.ref().child('/players/player1').set(player.user1);
+                database.ref().child('/playerTurn').set(1);
+                database.ref('/players/player1').onDisconnect().remove();
+            } else {
+                player.user2.assigned = true;
+                player.user2.name = $('.playerName').val().trim();
+                database.ref().child('/players/player2').set(player.user2);
+                database.ref('/players/player2').onDisconnect().remove();
+            }
+        }
+    })
 })
