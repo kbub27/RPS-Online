@@ -50,7 +50,7 @@ $(document).ready(function () {
     $('.joinGame').on('click', function (event) {
         event.preventDefault();
 
-        if ($('.playerName').val().trim() !== '' && !(player.user1.assigned && player.user2.assigned)) {
+        if ($('.playerName').val().trim() !== '') {
             if (player.user1.assigned === false) {
                 player.user1.name = $('.playerName').val().trim();
                 player.user1.assigned = true;
