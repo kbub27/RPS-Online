@@ -52,26 +52,29 @@ $(document).ready(function () {
 // CHECK TO MAKE SURE A NAME WAS ENTERED
         if ($('.playerName').val().trim() !== '') {
 // CHECK TO MAKE SURE THERE IS AN AVAILABLE SPOT OPEN IN THE GAME AND ASSIGN TO OPEN SPOT
+            var username = $('#playerInput').val();
+            var battleCry = $('#quote').val();
+
             if (player.user1.assigned === false) {
                 player.user1.name = $('.playerName').val().trim();
                 player.user1.assigned = true;
                 database.ref().child('/players/player1').set(player.user1);
                 database.ref().child('/playerTurn').set(1);
                 database.ref('/players/player1').onDisconnect().remove();
+                $('.usernamePlayerOne').text(username);
+                $('.battleCryOne').text(battleCry);
             } else if (player.user2.assigned === false) {
                 player.user2.assigned = true;
                 player.user2.name = $('.playerName').val().trim();
                 database.ref().child('/players/player2').set(player.user2);
                 database.ref('/players/player2').onDisconnect().remove();
+                $('.usernamePlayerTwo').text(username);
+                $('.battleCryTwo').text(battleCry);
             } else {
                 alert('The Game is already at full capacity');
             }
         }
-        var username = $('#playerInput').val();
-        var battleCry = $('#quote').val();
 
-        $('.username').text(username);
-        $('.battleCry').text(battleCry);
     });
 // WHEN A PLAYER LEAVES THE GAME RESET THE ASSIGNED VALUE OF THAT PLAYER TO FALSE 
     database.ref("/players/").on("child_removed", function (snap) {
@@ -84,7 +87,7 @@ $(document).ready(function () {
 // SET FUNCTION TO SET CHOICES IN THE DATABASE PER PLAYER AS LONG AS A CHOICE HASNT ALREADY BEEN MADE THIS TURN
     $('.playerOneChoice').on('click', function () {
         if ($('.playerOneChoice').attr('data-value') === 'rock' && player.user1.choice === '') {
-            player.user1.choice = 'rock';
+        
         }
     })
 })
