@@ -59,7 +59,6 @@ $(document).ready(function () {
                 player.user1.name = $('.playerName').val().trim();
                 player.user1.assigned = true;
                 database.ref().child('/players/player1').set(player.user1);
-                database.ref().child('/playerTurn').set(1);
                 database.ref('/players/player1').onDisconnect().remove();
                 $('.usernamePlayerOne').text(username);
                 $('.battleCryOne').text(battleCry);
@@ -80,14 +79,20 @@ $(document).ready(function () {
     database.ref("/players/").on("child_removed", function (snap) {
         if (snap.val().user === 1) {
             player.user1.assigned = false;
+            player.user1.name = '';
+            player.user1.choice = '';
+            player.user1.wins = 0;
         } else if (snap.val().user === 2) {
             player.user2.assigned = false;
+            player.user2.name = '';
+            player.user2.choice = '';
+            player.user2.wins = 0;
         }
     });
 // SET FUNCTION TO SET CHOICES IN THE DATABASE PER PLAYER AS LONG AS A CHOICE HASNT ALREADY BEEN MADE THIS TURN
     $('.playerOneChoice').on('click', function () {
-        if ($('.playerOneChoice').attr('data-value') === 'rock' && player.user1.choice === '') {
-        
+        if (player.user1.choice === '') {
+            database.ref().child('/players/player1/choice').set($(this).attr('data-value'));
         }
     })
 })
