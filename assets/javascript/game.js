@@ -82,5 +82,9 @@ $(document).ready(function () {
         }
     });
 // SET FUNCTION TO SET CHOICES IN THE DATABASE PER PLAYER AS LONG AS A CHOICE HASNT ALREADY BEEN MADE THIS TURN
-
+    $('.playerOneChoice').on('click', function () {
+        if ($('.playerOneChoice').attr('data-value') === 'rock' && player.user1.choice === '') {
+            player.user1.choice = 'rock';
+        }
+    })
 })
