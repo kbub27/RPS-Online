@@ -16,13 +16,15 @@ $(document).ready(function () {
             name: '',
             assigned: false,
             choice: '',
-            wins: 0
+            wins: 0,
+            user: 1
         },
         user2: {
             name: '',
             assigned: false,
             choice: '',
-            wins: 0
+            wins: 0,
+            user: 2
         }
     };
     var inGame = false;
@@ -55,12 +57,22 @@ $(document).ready(function () {
                 database.ref().child('/players/player1').set(player.user1);
                 database.ref().child('/playerTurn').set(1);
                 database.ref('/players/player1').onDisconnect().remove();
-            } else {
+            } else if (player.user2.assigned === false) {
                 player.user2.assigned = true;
                 player.user2.name = $('.playerName').val().trim();
                 database.ref().child('/players/player2').set(player.user2);
                 database.ref('/players/player2').onDisconnect().remove();
+            } else {
+                alert('The Game is already at full capacity');
             }
+        }
+    });
+
+    database.ref("/players/").on("child_removed", function (snap) {
+        if (snap.val().user === 1) {
+            player.user1.assigned = false;
+        } else if (snap.val().user === 2) {
+            player.user2.assigned = false;
         }
     })
 })
