@@ -67,6 +67,11 @@ $(document).ready(function () {
                 alert('The Game is already at full capacity');
             }
         }
+        var username = $('#playerInput').val();
+        var battleCry = $('#quote').val();
+
+        $('.username').text(username);
+        $('.battleCry').text(battleCry);
     });
 // WHEN A PLAYER LEAVES THE GAME RESET THE ASSIGNED VALUE OF THAT PLAYER TO FALSE 
     database.ref("/players/").on("child_removed", function (snap) {
