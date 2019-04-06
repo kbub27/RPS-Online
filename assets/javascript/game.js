@@ -9,7 +9,7 @@ $(document).ready(function () {
         messagingSenderId: "20382010182"
     };
     firebase.initializeApp(config);
-
+// SET VARIABLES FOR THE GAME
     var database = firebase.database();
     var player = {
         user1: {
@@ -28,7 +28,7 @@ $(document).ready(function () {
         }
     };
     var inGame = false;
-
+// SET CONNECTION REFERANCE VARIABLES
     var connectionsRef = database.ref('/connections');
 
     var connectedRef = database.ref('.info/connected');
@@ -42,15 +42,16 @@ $(document).ready(function () {
             connection.onDisconnect().remove();
         }
     });
-
+// SHOW HOW MANY PEOPLES ARE WATCHING THE GAME BEING PLAYED
     connectionsRef.on('value', function (snapshot) {
         $('#veiwers').text('You have ' + snapshot.numChildren() + ' veiwers watching you play now!');
     });
-
+// SET FUNCTION TO JOIN THE GAME ON THE JOIN GAME BUTTON CLICK
     $('.joinGame').on('click', function (event) {
         event.preventDefault();
-
+// CHECK TO MAKE SURE A NAME WAS ENTERED
         if ($('.playerName').val().trim() !== '') {
+// CHECK TO MAKE SURE THERE IS AN AVAILABLE SPOT OPEN IN THE GAME AND ASSIGN TO OPEN SPOT
             if (player.user1.assigned === false) {
                 player.user1.name = $('.playerName').val().trim();
                 player.user1.assigned = true;
@@ -67,7 +68,7 @@ $(document).ready(function () {
             }
         }
     });
-
+// WHEN A PLAYER LEAVES THE GAME RESET THE ASSIGNED VALUE OF THAT PLAYER TO FALSE 
     database.ref("/players/").on("child_removed", function (snap) {
         if (snap.val().user === 1) {
             player.user1.assigned = false;
@@ -75,5 +76,6 @@ $(document).ready(function () {
             player.user2.assigned = false;
         }
     });
+// SET FUNCTION TO SET CHOICES IN THE DATABASE PER PLAYER AS LONG AS A CHOICE HASNT ALREADY BEEN MADE THIS TURN
 
 })
