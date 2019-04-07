@@ -9,7 +9,7 @@ $(document).ready(function () {
         messagingSenderId: "20382010182"
     };
     firebase.initializeApp(config);
-// SET VARIABLES FOR THE GAME
+    // SET VARIABLES FOR THE GAME
     var database = firebase.database();
     var player = {
         user1: {
@@ -28,7 +28,7 @@ $(document).ready(function () {
         }
     };
     var inGame = false;
-// SET CONNECTION REFERANCE VARIABLES
+    // SET CONNECTION REFERANCE VARIABLES
     var connectionsRef = database.ref('/connections');
 
     var connectedRef = database.ref('.info/connected');
@@ -42,16 +42,16 @@ $(document).ready(function () {
             connection.onDisconnect().remove();
         }
     });
-// SHOW HOW MANY PEOPLES ARE WATCHING THE GAME BEING PLAYED
+    // SHOW HOW MANY PEOPLES ARE WATCHING THE GAME BEING PLAYED
     connectionsRef.on('value', function (snapshot) {
         $('#veiwers').text('You have ' + snapshot.numChildren() + ' veiwers watching you play now!');
     });
-// SET FUNCTION TO JOIN THE GAME ON THE JOIN GAME BUTTON CLICK
+    // SET FUNCTION TO JOIN THE GAME ON THE JOIN GAME BUTTON CLICK
     $('.joinGame').on('click', function (event) {
         event.preventDefault();
-// CHECK TO MAKE SURE A NAME WAS ENTERED
+        // CHECK TO MAKE SURE A NAME WAS ENTERED
         if ($('.playerName').val().trim() !== '') {
-// CHECK TO MAKE SURE THERE IS AN AVAILABLE SPOT OPEN IN THE GAME AND ASSIGN TO OPEN SPOT
+            // CHECK TO MAKE SURE THERE IS AN AVAILABLE SPOT OPEN IN THE GAME AND ASSIGN TO OPEN SPOT
             var username = $('#playerInput').val();
             var battleCry = $('#quote').val();
 
@@ -75,7 +75,7 @@ $(document).ready(function () {
         }
 
     });
-// WHEN A PLAYER LEAVES THE GAME RESET THE ASSIGNED VALUE OF THAT PLAYER TO FALSE 
+    // WHEN A PLAYER LEAVES THE GAME RESET THE ASSIGNED VALUE OF THAT PLAYER TO FALSE 
     database.ref("/players/").on("child_removed", function (snap) {
         if (snap.val().user === 1) {
             player.user1.assigned = false;
@@ -89,29 +89,46 @@ $(document).ready(function () {
             player.user2.wins = 0;
         }
     });
-// SET FUNCTION TO SET CHOICES IN THE DATABASE PER PLAYER AS LONG AS A CHOICE HASNT ALREADY BEEN MADE THIS TURN
+    // SET FUNCTION TO SET CHOICES IN THE DATABASE PER PLAYER AS LONG AS A CHOICE HASNT ALREADY BEEN MADE THIS TURN
     var firstPlayerChoice = database.ref().child('/players/player1/choice');
     var secondPlayerChoice = database.ref().child('/players/player2/choice');
 
-    
+
     firstPlayerChoice.on('value', function (snapshot) {
         $('.playerOneChoice').on('click', function () {
             if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
                 alert('You have already made a choice.')
-            } else{
-                firstPlayerChoice.set($(this).attr('data-value'));    
+            } else {
+                firstPlayerChoice.set($(this).attr('data-value'));
+                user1Choice = $(this).attr('data-value');
+                checkChoices();
             }
-        });       
+        });
     });
 
     secondPlayerChoice.on('value', function (snapshot) {
         $('.playerTwoChoice').on('click', function () {
             if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
                 alert('You have already made a choice.')
-            } else{
-                secondPlayerChoice.set($(this).attr('data-value'));    
+            } else {
+                secondPlayerChoice.set($(this).attr('data-value'));
+                user2Choice = $(this).attr('data-value');
+                checkChoices();
             }
-        });       
+        });
     });
+
+    // SET FUNCTION TO CHECK PLAYER ONE CHOICE AGAINST PLAYER TWO CHOICE THEN DETERMINE A WINNER BASED ON ROCK PAPER SCISSOR RULES
+    var user1Choice = '';
+    var user2Choice = '';
+    function checkChoices() {
+        console.log(user1Choice);
+        console.log(user2Choice);
+        if ((user1Choice && user2Choice) === '') {
+            $('.waiting').show();
+        } else if (user1Choice === ('rock' || 'paper' || 'scissors') && user2Choice === '') {
+            $('.waitingText').text('Waiting on Player Two to make a choice');
+        }
+    }
 
 })

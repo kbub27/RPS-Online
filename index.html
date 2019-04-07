@@ -36,6 +36,13 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-md-12">
+                <div class="waiting">
+                    <h2 class="waitingText">Waiting on Both Players to make a choice!</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-12 game">
                 <div class="row">
                     <div class="col-md-4 player1">
@@ -44,18 +51,19 @@
                             <div class="card-body">
                                 <h5 class="card-title usernamePlayerOne">Player One.</h5>
                                 <p class="card-text battleCryOne"></p>
+                                <p class="pOneWins"></p>
                                 <button class="btn btn-primary playerOneChoice" data-value="rock">Rock</button>
                                 <button class="btn btn-warning playerOneChoice" data-value="paper">Paper</button>
                                 <button class="btn btn-danger playerOneChoice" data-value="scissors">Scissors</button>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 waiting">
+                    <div class="col-md-4 results">
                         <div class="card" style="width: 18rem;">
                             <img src="..." class="card-img-top" alt="...">
                             <div class="card-body">
-                                <h5 class="card-title">Waiting on both players to make choice.</h5>
-                                <p class="card-text">Please make a choice within a timely manner.</p>
+                                <h5 class="card-title">results</h5>
+                                <p class="card-text">results</p>
                             </div>
                         </div>
                     </div>
@@ -65,6 +73,7 @@
                             <div class="card-body">
                                 <h5 class="card-title usernamePlayerTwo">Player Two.</h5>
                                 <p class="card-text battleCryTwo"></p>
+                                <p class="pTwoWins"></p>
                                 <button class="btn btn-primary playerTwoChoice" data-value="rock">Rock</button>
                                 <button class="btn btn-warning playerTwoChoice" data-value="paper">Paper</button>
                                 <button class="btn btn-danger playerTwoChoice" data-value="scissors">Scissors</button>
