@@ -15,14 +15,14 @@ $(document).ready(function () {
         user1: {
             name: '',
             assigned: false,
-            choice: '',
+            choice: 'none',
             wins: 0,
             user: 1
         },
         user2: {
             name: '',
             assigned: false,
-            choice: '',
+            choice: 'none',
             wins: 0,
             user: 2
         }
@@ -80,19 +80,38 @@ $(document).ready(function () {
         if (snap.val().user === 1) {
             player.user1.assigned = false;
             player.user1.name = '';
-            player.user1.choice = '';
+            player.user1.choice = 'none';
             player.user1.wins = 0;
         } else if (snap.val().user === 2) {
             player.user2.assigned = false;
             player.user2.name = '';
-            player.user2.choice = '';
+            player.user2.choice = 'none';
             player.user2.wins = 0;
         }
     });
 // SET FUNCTION TO SET CHOICES IN THE DATABASE PER PLAYER AS LONG AS A CHOICE HASNT ALREADY BEEN MADE THIS TURN
-    $('.playerOneChoice').on('click', function () {
-        if (player.user1.choice === '') {
-            database.ref().child('/players/player1/choice').set($(this).attr('data-value'));
-        }
-    })
+    var firstPlayerChoice = database.ref().child('/players/player1/choice');
+    var secondPlayerChoice = database.ref().child('/players/player2/choice');
+
+    
+    firstPlayerChoice.on('value', function (snapshot) {
+        $('.playerOneChoice').on('click', function () {
+            if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
+                alert('You have already made a choice.')
+            } else{
+                firstPlayerChoice.set($(this).attr('data-value'));    
+            }
+        });       
+    });
+
+    secondPlayerChoice.on('value', function (snapshot) {
+        $('.playerTwoChoice').on('click', function () {
+            if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
+                alert('You have already made a choice.')
+            } else{
+                secondPlayerChoice.set($(this).attr('data-value'));    
+            }
+        });       
+    });
+
 })
