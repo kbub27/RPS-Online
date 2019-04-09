@@ -76,46 +76,61 @@ $(document).ready(function () {
 
     });
     // WHEN A PLAYER LEAVES THE GAME RESET THE ASSIGNED VALUE OF THAT PLAYER TO FALSE 
-    database.ref("/players/").on("child_removed", function (snap) {
-        if (snap.val().user === 1) {
-            player.user1.assigned = false;
-            player.user1.name = '';
-            player.user1.choice = 'none';
-            player.user1.wins = 0;
-        } else if (snap.val().user === 2) {
-            player.user2.assigned = false;
-            player.user2.name = '';
-            player.user2.choice = 'none';
-            player.user2.wins = 0;
-        }
-    });
+        database.ref("/players/").on("child_removed", function (snap) {
+            if (snap.val().user === 1) {
+                player.user1.assigned = false;
+                player.user1.name = '';
+                player.user1.choice = 'none';
+                player.user1.wins = 0;
+            } else if (snap.val().user === 2) {
+                player.user2.assigned = false;
+                player.user2.name = '';
+                player.user2.choice = 'none';
+                player.user2.wins = 0;
+            }
+        });
     // SET FUNCTION TO SET CHOICES IN THE DATABASE PER PLAYER AS LONG AS A CHOICE HASNT ALREADY BEEN MADE THIS TURN
     var firstPlayerChoice = database.ref().child('/players/player1/choice');
     var secondPlayerChoice = database.ref().child('/players/player2/choice');
+    var pOneVal = '';
+    var pTwoVal = '';
 
-
-    firstPlayerChoice.on('value', function (snapshot) {
-        $('.playerOneChoice').on('click', function () {
+    $('.playerOneChoice').on('click', function () {
+        pOneVal = $(this).attr('data-value');
+        firstPlayerChoice.on('value', function (snapshot) {
             if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
-                $('.madeChoice').text('You have already made a choice.')
+                $('.madeChoice').text('You have made a choice.')
             } else {
-                firstPlayerChoice.set($(this).attr('data-value'));
-                user1Choice = $(this).attr('data-value');
-            }
+                firstPlayerChoice.set(pOneVal);
+                console.log(pOneVal);
+                checkChoices();
+            };
+
         });
     });
 
-    secondPlayerChoice.on('value', function (snapshot) {
-        $('.playerTwoChoice').on('click', function () {
+    $('.playerTwoChoice').on('click', function () {
+        pTwoVal = $(this).attr('data-value');
+        secondPlayerChoice.on('value', function (snapshot) {
+            console.log(snapshot.val())
             if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
-                $('.madeChoiceTwo').text('You have already made a choice.')
+                $('.madeChoiceTwo').text('You have made a choice.')
             } else {
-                secondPlayerChoice.set($(this).attr('data-value'));
-                user2Choice = $(this).attr('data-value');
-            }
+                secondPlayerChoice.set(pTwoVal);
+                checkChoices();
+            };
+
         });
     });
 
     // SET FUNCTION TO CHECK PLAYER ONE CHOICE AGAINST PLAYER TWO CHOICE THEN DETERMINE A WINNER BASED ON ROCK PAPER SCISSOR RULES
-
+    function checkChoices() {
+        if (pOneVal === pTwoVal) {
+            $('.gameResults').text('You both picked the same choice! Pick Again!');
+            $('.madeChoice').text('Pick Again!');
+            $('.madeChoiceTwo').text('Pick Again!');
+            firstPlayerChoice.set('none');
+            secondPlayerChoice.set('none');
+        }
+    }
 })
