@@ -110,7 +110,7 @@ $(document).ready(function () {
         $('.playerOneChoice').on('click', function () {
             pOneVal = $(this).attr('data-value');
             firstPlayerChoice.on('value', function (snapshot) {
-                if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
+                if ((snapshot.val() === 'rock') || (snapshot.val() === 'paper') || (snapshot.val() === 'scissors')) {
                     $('.madeChoice').text('You have made a choice.')
                 } else {
                     firstPlayerChoice.set(pOneVal);
@@ -124,7 +124,7 @@ $(document).ready(function () {
         $('.playerTwoChoice').on('click', function () {
             pTwoVal = $(this).attr('data-value');
             secondPlayerChoice.on('value', function (snapshot) {
-                if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
+                if ((snapshot.val() === 'rock') || (snapshot.val() === 'paper') || (snapshot.val() === 'scissors')) {
                     $('.madeChoiceTwo').text('You have made a choice.')
                 } else {
                     secondPlayerChoice.set(pTwoVal);
@@ -152,13 +152,21 @@ $(document).ready(function () {
             $('.madeChoice').text('');
             $('.madeChoiceTwo').text('');
             $('.pOneWins').text('Wins: ' + player.user1.wins);
+            pOneVal = '';
+            pTwoVal = '';
+            firstPlayerChoice.set('none');
+            secondPlayerChoice.set('none');
         } else if ((pTwoVal === 'rock' && pOneVal === 'scissors') || (pTwoVal === 'paper' && pOneVal === 'rock') || (pTwoVal === 'scissors' && pOneVal === 'paper')) {
             player.user2.wins++;
             firstPlayerWins.set(player.user2.wins);
             $('.gameResults').text($('.usernamePlayerTwo').text() + ' Has Won this round!');
             $('.madeChoice').text('');
             $('.madeChoiceTwo').text('');
-            $('.pOneWins').text('Wins: ' + player.user2.wins);
+            $('.pTwoWins').text('Wins: ' + player.user2.wins);
+            pOneVal = '';
+            pTwoVal = '';
+            firstPlayerChoice.set('none');
+            secondPlayerChoice.set('none');
         }
     };
 
