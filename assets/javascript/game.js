@@ -202,6 +202,6 @@ $(document).ready(function () {
         var chatEntry = $("<div>").html(msg);
 
 
-        $("#chatDisplay").append(chatEntry);
+        //$("#chatDisplay").append(chatEntry);
     })
 });
