@@ -78,6 +78,7 @@ $(document).ready(function () {
 
         $('#playerInput').val('');
         $('#quote').val('');
+        hideJumbo();
 
     });
     // WHEN A PLAYER LEAVES THE GAME RESET THE ASSIGNED VALUE OF THAT PLAYER TO FALSE 
@@ -92,7 +93,8 @@ $(document).ready(function () {
                 player.user2.name = '';
                 player.user2.choice = 'none';
                 player.user2.wins = 0;
-            }
+            };
+            hideJumbo();
         });
     // SET FUNCTION TO SET CHOICES IN THE DATABASE PER PLAYER AS LONG AS A CHOICE HASNT ALREADY BEEN MADE THIS TURN
     var firstPlayerName = database.ref().child('/players/player1/name');
@@ -137,7 +139,7 @@ $(document).ready(function () {
 
     // SET FUNCTION TO CHECK PLAYER ONE CHOICE AGAINST PLAYER TWO CHOICE THEN DETERMINE A WINNER BASED ON ROCK PAPER SCISSOR RULES
     function checkChoices() {
-        if (pOneVal === 'rock' && pTwoVal === 'rock') {
+        if ((pOneVal === 'rock' && pTwoVal === 'rock') || (pOneVal === 'paper' && pTwoVal === 'paper') || (pOneVal === 'scissors' && pTwoVal === 'scissors')) {
             $('.gameResults').text('You both picked the same choice! Pick Again!');
             $('.madeChoice').text('Pick Again!');
             $('.madeChoiceTwo').text('Pick Again!');
@@ -147,22 +149,28 @@ $(document).ready(function () {
             secondPlayerChoice.set('none');
         } else if ((pOneVal === 'rock' && pTwoVal === 'scissors') || (pOneVal === 'paper' && pTwoVal === 'rock') || (pOneVal === 'scissors' && pTwoVal === 'paper')) {
             player.user1.wins++;
+            player.user2.losses++;
             firstPlayerWins.set(player.user1.wins);
+            secondPlayerLosses.set(player.user2.losses);
             $('.gameResults').text($('.usernamePlayerOne').text() + ' Has Won this round!');
             $('.madeChoice').text('');
             $('.madeChoiceTwo').text('');
             $('.pOneWins').text('Wins: ' + player.user1.wins);
+            $('.pTwoLosses').text('Losses: ' + player.user2.losses);
             pOneVal = '';
             pTwoVal = '';
             firstPlayerChoice.set('none');
             secondPlayerChoice.set('none');
         } else if ((pTwoVal === 'rock' && pOneVal === 'scissors') || (pTwoVal === 'paper' && pOneVal === 'rock') || (pTwoVal === 'scissors' && pOneVal === 'paper')) {
             player.user2.wins++;
-            firstPlayerWins.set(player.user2.wins);
+            player.user1.losses++;
+            secondPlayerWins.set(player.user2.wins);
+            firstPlayerLosses.set(player.user1.losses);
             $('.gameResults').text($('.usernamePlayerTwo').text() + ' Has Won this round!');
             $('.madeChoice').text('');
             $('.madeChoiceTwo').text('');
             $('.pTwoWins').text('Wins: ' + player.user2.wins);
+            $('.pOneLosses').text('Losses: ' + player.user1.losses);
             pOneVal = '';
             pTwoVal = '';
             firstPlayerChoice.set('none');
@@ -170,5 +178,12 @@ $(document).ready(function () {
         }
     };
 
+    function hideJumbo() {
+        if (player.user1.assigned === true && player.user2.assigned === true) {
+            $('.jumbotron').hide();
+        } else {
+            $('.jumbotron').show();
+        }
+    };
 
 });
