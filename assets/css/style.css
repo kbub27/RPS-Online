@@ -1,6 +1,7 @@
 body {
     text-align: center;
-
+    background-image: url(../images/backgroundRPS.jfif);
+    background-size: 100%;
 }
 
 img {
