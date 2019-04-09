@@ -10,10 +10,22 @@ img {
 
 .jumbotron {
     padding: 10px;
+    background-image: url(../images/jumboBacground.jfif);
+    background-size: 100%;
+    color: white;
 }
 
 .game {
     display: flex;
     justify-content: space-evenly;
     margin: 10px;
+}
+
+input {
+    margin: 5px;
+    text-align: center;
+}
+
+.container {
+    background-color: black;
 }
