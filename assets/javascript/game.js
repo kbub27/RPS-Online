@@ -76,6 +76,9 @@ $(document).ready(function () {
             }
         }
 
+        $('#playerInput').val('');
+        $('#quote').val('');
+
     });
     // WHEN A PLAYER LEAVES THE GAME RESET THE ASSIGNED VALUE OF THAT PLAYER TO FALSE 
         database.ref("/players/").on("child_removed", function (snap) {
@@ -92,47 +95,72 @@ $(document).ready(function () {
             }
         });
     // SET FUNCTION TO SET CHOICES IN THE DATABASE PER PLAYER AS LONG AS A CHOICE HASNT ALREADY BEEN MADE THIS TURN
+    var firstPlayerName = database.ref().child('/players/player1/name');
+    var secondPlayerName = database.ref().child('/players/player2/name');
     var firstPlayerChoice = database.ref().child('/players/player1/choice');
     var secondPlayerChoice = database.ref().child('/players/player2/choice');
+    var firstPlayerWins = database.ref().child('/players/player1/wins');
+    var secondPlayerWins = database.ref().child('/players/player2/wins');
+    var firstPlayerLosses = database.ref().child('/players/player1/losses');
+    var secondPlayerLosses = database.ref().child('/players/player2/losses');
     var pOneVal = '';
     var pTwoVal = '';
 
-    $('.playerOneChoice').on('click', function () {
-        pOneVal = $(this).attr('data-value');
-        firstPlayerChoice.on('value', function (snapshot) {
-            if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
-                $('.madeChoice').text('You have made a choice.')
-            } else {
-                firstPlayerChoice.set(pOneVal);
-                console.log(pOneVal);
-                checkChoices();
-            };
 
+        $('.playerOneChoice').on('click', function () {
+            pOneVal = $(this).attr('data-value');
+            firstPlayerChoice.on('value', function (snapshot) {
+                if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
+                    $('.madeChoice').text('You have made a choice.')
+                } else {
+                    firstPlayerChoice.set(pOneVal);
+                    console.log(pOneVal);
+                    checkChoices();
+                };
+
+            });
         });
-    });
 
-    $('.playerTwoChoice').on('click', function () {
-        pTwoVal = $(this).attr('data-value');
-        secondPlayerChoice.on('value', function (snapshot) {
-            console.log(snapshot.val())
-            if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
-                $('.madeChoiceTwo').text('You have made a choice.')
-            } else {
-                secondPlayerChoice.set(pTwoVal);
-                checkChoices();
-            };
+        $('.playerTwoChoice').on('click', function () {
+            pTwoVal = $(this).attr('data-value');
+            secondPlayerChoice.on('value', function (snapshot) {
+                if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
+                    $('.madeChoiceTwo').text('You have made a choice.')
+                } else {
+                    secondPlayerChoice.set(pTwoVal);
+                    console.log(pTwoVal);
+                    checkChoices();
+                };
 
+            });
         });
-    });
 
     // SET FUNCTION TO CHECK PLAYER ONE CHOICE AGAINST PLAYER TWO CHOICE THEN DETERMINE A WINNER BASED ON ROCK PAPER SCISSOR RULES
     function checkChoices() {
-        if (pOneVal === pTwoVal) {
+        if (pOneVal === 'rock' && pTwoVal === 'rock') {
             $('.gameResults').text('You both picked the same choice! Pick Again!');
             $('.madeChoice').text('Pick Again!');
             $('.madeChoiceTwo').text('Pick Again!');
+            pOneVal = '';
+            pTwoVal = '';
             firstPlayerChoice.set('none');
             secondPlayerChoice.set('none');
+        } else if ((pOneVal === 'rock' && pTwoVal === 'scissors') || (pOneVal === 'paper' && pTwoVal === 'rock') || (pOneVal === 'scissors' && pTwoVal === 'paper')) {
+            player.user1.wins++;
+            firstPlayerWins.set(player.user1.wins);
+            $('.gameResults').text($('.usernamePlayerOne').text() + ' Has Won this round!');
+            $('.madeChoice').text('');
+            $('.madeChoiceTwo').text('');
+            $('.pOneWins').text('Wins: ' + player.user1.wins);
+        } else if ((pTwoVal === 'rock' && pOneVal === 'scissors') || (pTwoVal === 'paper' && pOneVal === 'rock') || (pTwoVal === 'scissors' && pOneVal === 'paper')) {
+            player.user2.wins++;
+            firstPlayerWins.set(player.user2.wins);
+            $('.gameResults').text($('.usernamePlayerTwo').text() + ' Has Won this round!');
+            $('.madeChoice').text('');
+            $('.madeChoiceTwo').text('');
+            $('.pOneWins').text('Wins: ' + player.user2.wins);
         }
-    }
-})
+    };
+
+
+});
