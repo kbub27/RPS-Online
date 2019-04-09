@@ -28,8 +28,27 @@ input {
 
 .container {
     background-color: black;
+    padding: 10px;
 }
 
 #chatDisplay {
-    color: white;
+    background-color: white;
+    color: black;
+    overflow-y: scroll;
+    height: 50px;
+    text-align: left;
+    margin: 10px;
+
 }
+
+#chat-input {
+    height: 30px;
+    width: 250px;
+    resize: none;
+}
+
+.chat-panel {
+    display: flex;
+    justify-content: space-around;
+}
+

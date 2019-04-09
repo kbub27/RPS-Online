@@ -202,6 +202,8 @@ $(document).ready(function () {
         var chatEntry = $("<div>").html(msg);
 
 
-        //$("#chatDisplay").append(chatEntry);
+        $("#chatDisplay").append(chatEntry);
+        $("#chatDisplay").scrollTop($("#chatDisplay")[0].scrollHeight);
+        $('#chat-input').val('');
     })
 });
