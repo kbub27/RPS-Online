@@ -29,3 +29,7 @@ input {
 .container {
     background-color: black;
 }
+
+#chatDisplay {
+    color: white;
+}

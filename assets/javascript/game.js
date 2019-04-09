@@ -196,4 +196,12 @@ $(document).ready(function () {
         }
     };
 
+    $('#chat-send').on('click', function (event) {
+        event.preventDefault();
+        var msg = $('#chat-input').val();
+        var chatEntry = $("<div>").html(msg);
+
+
+        $("#chatDisplay").append(chatEntry);
+    })
 });
