@@ -88,11 +88,21 @@ $(document).ready(function () {
                 player.user1.name = '';
                 player.user1.choice = 'none';
                 player.user1.wins = 0;
+                player.user1.losses = 0;
+                $('.pOneWins').text('Wins: ' + player.user1.wins);
+                $('.pOneLosses').text('Losses: ' + player.user1.losses);
+                $('.usernamePlayerOne').text('Waiting on Player!');
+                $('.battleCryOne').text('');
             } else if (snap.val().user === 2) {
                 player.user2.assigned = false;
                 player.user2.name = '';
                 player.user2.choice = 'none';
                 player.user2.wins = 0;
+                player.user2.losses = 0;
+                $('.pTwoWins').text('Wins: ' + player.user2.wins);
+                $('.pTwoLosses').text('Losses: ' + player.user2.losses);
+                $('.usernamePlayerTwo').text('Waiting on Player!');
+                $('.battleCryTwo').text('');
             };
             hideJumbo();
         });

@@ -1,7 +1,18 @@
+body {
+    text-align: center;
+
+}
+
 img {
     height: 150px;
 }
 
 .jumbotron {
     padding: 10px;
+}
+
+.game {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 10px;
 }
