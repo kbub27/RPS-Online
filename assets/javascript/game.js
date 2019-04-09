@@ -17,6 +17,7 @@ $(document).ready(function () {
             assigned: false,
             choice: 'none',
             wins: 0,
+            losses: 0,
             user: 1
         },
         user2: {
@@ -24,6 +25,7 @@ $(document).ready(function () {
             assigned: false,
             choice: 'none',
             wins: 0,
+            losses: 0,
             user: 2
         }
     };
