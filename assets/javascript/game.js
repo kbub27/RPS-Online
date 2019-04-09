@@ -97,11 +97,10 @@ $(document).ready(function () {
     firstPlayerChoice.on('value', function (snapshot) {
         $('.playerOneChoice').on('click', function () {
             if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
-                alert('You have already made a choice.')
+                $('.madeChoice').text('You have already made a choice.')
             } else {
                 firstPlayerChoice.set($(this).attr('data-value'));
                 user1Choice = $(this).attr('data-value');
-                checkChoices();
             }
         });
     });
@@ -109,26 +108,14 @@ $(document).ready(function () {
     secondPlayerChoice.on('value', function (snapshot) {
         $('.playerTwoChoice').on('click', function () {
             if (snapshot.val() === ('rock' || 'paper' || 'scissors')) {
-                alert('You have already made a choice.')
+                $('.madeChoiceTwo').text('You have already made a choice.')
             } else {
                 secondPlayerChoice.set($(this).attr('data-value'));
                 user2Choice = $(this).attr('data-value');
-                checkChoices();
             }
         });
     });
 
     // SET FUNCTION TO CHECK PLAYER ONE CHOICE AGAINST PLAYER TWO CHOICE THEN DETERMINE A WINNER BASED ON ROCK PAPER SCISSOR RULES
-    var user1Choice = '';
-    var user2Choice = '';
-    function checkChoices() {
-        console.log(user1Choice);
-        console.log(user2Choice);
-        if ((user1Choice && user2Choice) === '') {
-            $('.waiting').show();
-        } else if (user1Choice === ('rock' || 'paper' || 'scissors') && user2Choice === '') {
-            $('.waitingText').text('Waiting on Player Two to make a choice');
-        }
-    }
 
 })
