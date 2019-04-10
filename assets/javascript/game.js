@@ -242,5 +242,7 @@ $(document).ready(function () {
         $("#chatDisplay").append(chatEntry);
         $("#chatDisplay").scrollTop($("#chatDisplay")[0].scrollHeight);
         $('#chat-input').val('');
-    })
+    });
+
+    checkChoices();
 });
