@@ -18,7 +18,8 @@ $(document).ready(function () {
             choice: 'none',
             wins: 0,
             losses: 0,
-            user: 1
+            user: 1,
+            battlecry: ''
         },
         user2: {
             name: '',
@@ -26,10 +27,24 @@ $(document).ready(function () {
             choice: 'none',
             wins: 0,
             losses: 0,
-            user: 2
+            user: 2,
+            battlecry: ''
         }
     };
     var inGame = false;
+    var firstPlayerCry = database.ref().child('/players/player1/battlecry');
+    var secondPlayerCry = database.ref().child('/players/player2/battlecry');
+    var firstPlayerName = database.ref().child('/players/player1/name');
+    var secondPlayerName = database.ref().child('/players/player2/name');
+    var firstPlayerChoice = database.ref().child('/players/player1/choice');
+    var secondPlayerChoice = database.ref().child('/players/player2/choice');
+    var firstPlayerWins = database.ref().child('/players/player1/wins');
+    var secondPlayerWins = database.ref().child('/players/player2/wins');
+    var firstPlayerLosses = database.ref().child('/players/player1/losses');
+    var secondPlayerLosses = database.ref().child('/players/player2/losses');
+    var pOneVal = '';
+    var pTwoVal = '';
+    var pOneAssigned = 0;
     // SET CONNECTION REFERANCE VARIABLES
     var connectionsRef = database.ref('/connections');
 
@@ -49,6 +64,11 @@ $(document).ready(function () {
         $('#veiwers').text('You have ' + snapshot.numChildren() + ' veiwers watching you play now!');
     });
     // SET FUNCTION TO JOIN THE GAME ON THE JOIN GAME BUTTON CLICK
+    database.ref().child('/players/player1').set(player.user1);
+    database.ref('/players/player1').onDisconnect().remove();
+    database.ref().child('/players/player2').set(player.user2);
+    database.ref('/players/player2').onDisconnect().remove();
+
     $('.joinGame').on('click', function (event) {
         event.preventDefault();
         // CHECK TO MAKE SURE A NAME WAS ENTERED
@@ -56,25 +76,49 @@ $(document).ready(function () {
             // CHECK TO MAKE SURE THERE IS AN AVAILABLE SPOT OPEN IN THE GAME AND ASSIGN TO OPEN SPOT
             var username = $('#playerInput').val();
             var battleCry = $('#quote').val();
-
-            if (player.user1.assigned === false) {
-                player.user1.name = $('.playerName').val().trim();
-                player.user1.assigned = true;
-                database.ref().child('/players/player1').set(player.user1);
-                database.ref('/players/player1').onDisconnect().remove();
-                $('.usernamePlayerOne').text(username);
-                $('.battleCryOne').text(battleCry);
-            } else if (player.user2.assigned === false) {
-                player.user2.assigned = true;
-                player.user2.name = $('.playerName').val().trim();
-                database.ref().child('/players/player2').set(player.user2);
-                database.ref('/players/player2').onDisconnect().remove();
-                $('.usernamePlayerTwo').text(username);
-                $('.battleCryTwo').text(battleCry);
-            } else {
-                alert('The Game is already at full capacity');
-            }
-        }
+            pOneAssigned++;
+            console.log(pOneAssigned);
+            database.ref('/players/player1/assigned').on('value', function (snapshot) {
+                pOneAssigned++
+                if (snapshot.val() === false && pOneAssigned === 2) {
+                    database.ref().child('/players/player1/assigned').set(true);
+                    firstPlayerName.set(username);
+                    firstPlayerCry.set(battleCry);
+                    firstPlayerLosses.set(player.user1.losses);
+                    firstPlayerWins.set(player.user1.wins);
+                    $('.pOneWins').text('Wins: ' + player.user1.wins);
+                    $('.pOneLosses').text('Losses: ' + player.user1.losses);
+                    firstPlayerName.on('value', function (snap) {
+                        $('.usernamePlayerOne').text(snap.val()); 
+                    });
+                    firstPlayerCry.on('value', function (snap) {
+                        $('.battleCryOne').text(snap.val());
+                    });
+                    console.log(pOneAssigned);
+                } 
+            });
+            console.log(pOneAssigned);
+            database.ref('/players/player2/assigned').on('value', function (snapshot) {
+                if (snapshot.val() === false && pOneAssigned === 5) {
+                    pOneAssigned++;
+                    database.ref().child('/players/player2/assigned').set(true);
+                    secondPlayerName.set(username);
+                    secondPlayerCry.set(battleCry);
+                    secondPlayerLosses.set(player.user2.losses);
+                    secondPlayerWins.set(player.user2.wins);
+                    $('.pTwoWins').text('Wins: ' + player.user2.wins);
+                    $('.pTwoLosses').text('Losses: ' + player.user2.losses);
+                    secondPlayerName.on('value', function (snap) {
+                        $('.usernamePlayerTwo').text(snap.val()); 
+                    });
+                    secondPlayerCry.on('value', function (snap) {
+                        $('.battleCryTwo').text(snap.val());
+                    });
+                    console.log(pOneAssigned);
+                } 
+            });
+        };
+    
 
         $('#playerInput').val('');
         $('#quote').val('');
@@ -93,6 +137,8 @@ $(document).ready(function () {
                 $('.pOneLosses').text('Losses: ' + player.user1.losses);
                 $('.usernamePlayerOne').text('Waiting on Player!');
                 $('.battleCryOne').text('');
+                pOneAssigned = 0;
+                database.ref().child('/players/player1').set(player.user1);
             } else if (snap.val().user === 2) {
                 player.user2.assigned = false;
                 player.user2.name = '';
@@ -103,20 +149,12 @@ $(document).ready(function () {
                 $('.pTwoLosses').text('Losses: ' + player.user2.losses);
                 $('.usernamePlayerTwo').text('Waiting on Player!');
                 $('.battleCryTwo').text('');
+                pOneAssigned = 3;
+                database.ref().child('/players/player2').set(player.user2);
             };
             hideJumbo();
         });
     // SET FUNCTION TO SET CHOICES IN THE DATABASE PER PLAYER AS LONG AS A CHOICE HASNT ALREADY BEEN MADE THIS TURN
-    var firstPlayerName = database.ref().child('/players/player1/name');
-    var secondPlayerName = database.ref().child('/players/player2/name');
-    var firstPlayerChoice = database.ref().child('/players/player1/choice');
-    var secondPlayerChoice = database.ref().child('/players/player2/choice');
-    var firstPlayerWins = database.ref().child('/players/player1/wins');
-    var secondPlayerWins = database.ref().child('/players/player2/wins');
-    var firstPlayerLosses = database.ref().child('/players/player1/losses');
-    var secondPlayerLosses = database.ref().child('/players/player2/losses');
-    var pOneVal = '';
-    var pTwoVal = '';
 
 
         $('.playerOneChoice').on('click', function () {
@@ -189,7 +227,7 @@ $(document).ready(function () {
     };
 
     function hideJumbo() {
-        if (player.user1.assigned === true && player.user2.assigned === true) {
+        if (pOneAssigned === 6) {
             $('.jumbotron').hide();
         } else {
             $('.jumbotron').show();
