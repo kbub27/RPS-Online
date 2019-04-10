@@ -44,18 +44,18 @@ $(document).ready(function () {
     var secondPlayerLosses = database.ref().child('/players/player2/losses');
     var pOneVal = '';
     var pTwoVal = '';
-    var pOneAssigned = 0;
+    var pOneAssigned = database.ref().child('/players/pOneAssigned');
     // SET CONNECTION REFERANCE VARIABLES
     var connectionsRef = database.ref('/connections');
-
+    
     var connectedRef = database.ref('.info/connected');
-
+    
     connectedRef.on("value", function (snap) {
-
+        
         if (snap.val()) {
-
+            
             var connection = connectionsRef.push(true);
-
+            
             connection.onDisconnect().remove();
         }
     });
@@ -68,7 +68,12 @@ $(document).ready(function () {
     database.ref('/players/player1').onDisconnect().remove();
     database.ref().child('/players/player2').set(player.user2);
     database.ref('/players/player2').onDisconnect().remove();
-
+    pOneAssigned.set(2);
+    var assigned;
+    pOneAssigned.on('value', function (snap) {
+        assigned = snap.val();
+    });
+    
     $('.joinGame').on('click', function (event) {
         event.preventDefault();
         // CHECK TO MAKE SURE A NAME WAS ENTERED
@@ -76,11 +81,8 @@ $(document).ready(function () {
             // CHECK TO MAKE SURE THERE IS AN AVAILABLE SPOT OPEN IN THE GAME AND ASSIGN TO OPEN SPOT
             var username = $('#playerInput').val();
             var battleCry = $('#quote').val();
-            pOneAssigned++;
-            console.log(pOneAssigned);
             database.ref('/players/player1/assigned').on('value', function (snapshot) {
-                pOneAssigned++
-                if (snapshot.val() === false && pOneAssigned === 2) {
+                if (snapshot.val() === false && assigned === 2) {
                     database.ref().child('/players/player1/assigned').set(true);
                     firstPlayerName.set(username);
                     firstPlayerCry.set(battleCry);
@@ -94,13 +96,10 @@ $(document).ready(function () {
                     firstPlayerCry.on('value', function (snap) {
                         $('.battleCryOne').text(snap.val());
                     });
-                    console.log(pOneAssigned);
                 } 
             });
-            console.log(pOneAssigned);
             database.ref('/players/player2/assigned').on('value', function (snapshot) {
-                if (snapshot.val() === false && pOneAssigned === 5) {
-                    pOneAssigned++;
+                if (snapshot.val() === false && assigned === 5) {
                     database.ref().child('/players/player2/assigned').set(true);
                     secondPlayerName.set(username);
                     secondPlayerCry.set(battleCry);
@@ -114,30 +113,30 @@ $(document).ready(function () {
                     secondPlayerCry.on('value', function (snap) {
                         $('.battleCryTwo').text(snap.val());
                     });
-                    console.log(pOneAssigned);
                 } 
             });
         };
-    
-
+        
+        
         $('#playerInput').val('');
         $('#quote').val('');
         hideJumbo();
-
+        pOneAssigned.set(5)
+        
     });
     // WHEN A PLAYER LEAVES THE GAME RESET THE ASSIGNED VALUE OF THAT PLAYER TO FALSE 
-        database.ref("/players/").on("child_removed", function (snap) {
+    database.ref("/players/").on("child_removed", function (snap) {
             if (snap.val().user === 1) {
                 player.user1.assigned = false;
                 player.user1.name = '';
                 player.user1.choice = 'none';
                 player.user1.wins = 0;
                 player.user1.losses = 0;
+                pOneAssigned.set(2);
                 $('.pOneWins').text('Wins: ' + player.user1.wins);
                 $('.pOneLosses').text('Losses: ' + player.user1.losses);
                 $('.usernamePlayerOne').text('Waiting on Player!');
                 $('.battleCryOne').text('');
-                pOneAssigned = 0;
                 database.ref().child('/players/player1').set(player.user1);
             } else if (snap.val().user === 2) {
                 player.user2.assigned = false;
@@ -145,11 +144,11 @@ $(document).ready(function () {
                 player.user2.choice = 'none';
                 player.user2.wins = 0;
                 player.user2.losses = 0;
+                pOneAssigned.set(5);
                 $('.pTwoWins').text('Wins: ' + player.user2.wins);
                 $('.pTwoLosses').text('Losses: ' + player.user2.losses);
                 $('.usernamePlayerTwo').text('Waiting on Player!');
                 $('.battleCryTwo').text('');
-                pOneAssigned = 3;
                 database.ref().child('/players/player2').set(player.user2);
             };
             hideJumbo();
