@@ -43,7 +43,13 @@ $(document).ready(function () {
     var firstPlayerLosses = database.ref().child('/players/player1/losses');
     var secondPlayerLosses = database.ref().child('/players/player2/losses');
     var pOneVal = '';
+    firstPlayerChoice.on('value', function (snap) {
+        pOneVal = snap.val();
+    })
     var pTwoVal = '';
+    secondPlayerChoice.on('value', function (snap) {
+        pTwoVal = snap.val();
+    })
     var pOneAssigned = database.ref().child('/players/pOneAssigned');
     // SET CONNECTION REFERANCE VARIABLES
     var connectionsRef = database.ref('/connections');
@@ -190,8 +196,6 @@ $(document).ready(function () {
             $('.gameResults').text('You both picked the same choice! Pick Again!');
             $('.madeChoice').text('Pick Again!');
             $('.madeChoiceTwo').text('Pick Again!');
-            pOneVal = '';
-            pTwoVal = '';
             firstPlayerChoice.set('none');
             secondPlayerChoice.set('none');
         } else if ((pOneVal === 'rock' && pTwoVal === 'scissors') || (pOneVal === 'paper' && pTwoVal === 'rock') || (pOneVal === 'scissors' && pTwoVal === 'paper')) {
@@ -204,8 +208,6 @@ $(document).ready(function () {
             $('.madeChoiceTwo').text('');
             $('.pOneWins').text('Wins: ' + player.user1.wins);
             $('.pTwoLosses').text('Losses: ' + player.user2.losses);
-            pOneVal = '';
-            pTwoVal = '';
             firstPlayerChoice.set('none');
             secondPlayerChoice.set('none');
         } else if ((pTwoVal === 'rock' && pOneVal === 'scissors') || (pTwoVal === 'paper' && pOneVal === 'rock') || (pTwoVal === 'scissors' && pOneVal === 'paper')) {
@@ -218,8 +220,6 @@ $(document).ready(function () {
             $('.madeChoiceTwo').text('');
             $('.pTwoWins').text('Wins: ' + player.user2.wins);
             $('.pOneLosses').text('Losses: ' + player.user1.losses);
-            pOneVal = '';
-            pTwoVal = '';
             firstPlayerChoice.set('none');
             secondPlayerChoice.set('none');
         }
