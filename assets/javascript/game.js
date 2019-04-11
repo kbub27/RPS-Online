@@ -102,6 +102,7 @@ $(document).ready(function () {
             });
             database.ref('/players/player2/assigned').on('value', function (snapshot) {
                 if (snapshot.val() === false && assigned === 5) {
+                    pOneAssigned.set(6);
                     database.ref().child('/players/player2/assigned').set(true);
                     secondPlayerName.set(username);
                     secondPlayerCry.set(battleCry);
