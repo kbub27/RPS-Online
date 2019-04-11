@@ -45,10 +45,12 @@ $(document).ready(function () {
     var pOneVal = '';
     firstPlayerChoice.on('value', function (snap) {
         pOneVal = snap.val();
+        checkChoices();
     })
     var pTwoVal = '';
     secondPlayerChoice.on('value', function (snap) {
         pTwoVal = snap.val();
+        checkChoices();
     })
     var pOneAssigned = database.ref().child('/players/pOneAssigned');
     // SET CONNECTION REFERANCE VARIABLES
@@ -243,6 +245,5 @@ $(document).ready(function () {
         $("#chatDisplay").scrollTop($("#chatDisplay")[0].scrollHeight);
         $('#chat-input').val('');
     });
-
     checkChoices();
 });
