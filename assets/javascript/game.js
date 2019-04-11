@@ -31,7 +31,7 @@ $(document).ready(function () {
             battlecry: ''
         }
     };
-    var inGame = false;
+
     var firstPlayerCry = database.ref().child('/players/player1/battlecry');
     var secondPlayerCry = database.ref().child('/players/player2/battlecry');
     var firstPlayerName = database.ref().child('/players/player1/name');
@@ -236,15 +236,22 @@ $(document).ready(function () {
         }
     };
 
+    var storedmsg;
+    var chatEntry = $("<div>").html(storedmsg);
     $('#chat-send').on('click', function (event) {
         event.preventDefault();
         var msg = $('#chat-input').val();
-        var chatEntry = $("<div>").html(msg);
+        database.ref('/players/chat').child(msg);
+        database.ref('/players/chat').on('value', function (snap) {
+            storedmsg = snap.val();
+            console.log(storedmsg);
+        })
 
-
-        $("#chatDisplay").append(chatEntry);
-        $("#chatDisplay").scrollTop($("#chatDisplay")[0].scrollHeight);
         $('#chat-input').val('');
     });
+
+    $("#chatDisplay").append(chatEntry);
+    $("#chatDisplay").scrollTop($("#chatDisplay")[0].scrollHeight);
+
     checkChoices();
 });
