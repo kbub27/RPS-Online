@@ -13,7 +13,7 @@ $(document).ready(function () {
     var database = firebase.database();
     var player = {
         user1: {
-            name: '',
+            name: 'Waiting on Player!',
             assigned: false,
             choice: 'none',
             wins: 0,
@@ -22,7 +22,7 @@ $(document).ready(function () {
             battlecry: ''
         },
         user2: {
-            name: '',
+            name: 'Waiting on Player!',
             assigned: false,
             choice: 'none',
             wins: 0,
