@@ -96,12 +96,6 @@ $(document).ready(function () {
                     firstPlayerWins.set(player.user1.wins);
                     $('.pOneWins').text('Wins: ' + player.user1.wins);
                     $('.pOneLosses').text('Losses: ' + player.user1.losses);
-                    firstPlayerName.on('value', function (snap) {
-                        $('.usernamePlayerOne').text(snap.val()); 
-                    });
-                    firstPlayerCry.on('value', function (snap) {
-                        $('.battleCryOne').text(snap.val());
-                    });
                 } 
             });
             database.ref('/players/player2/assigned').on('value', function (snapshot) {
@@ -113,12 +107,6 @@ $(document).ready(function () {
                     secondPlayerWins.set(player.user2.wins);
                     $('.pTwoWins').text('Wins: ' + player.user2.wins);
                     $('.pTwoLosses').text('Losses: ' + player.user2.losses);
-                    secondPlayerName.on('value', function (snap) {
-                        $('.usernamePlayerTwo').text(snap.val()); 
-                    });
-                    secondPlayerCry.on('value', function (snap) {
-                        $('.battleCryTwo').text(snap.val());
-                    });
                 } 
             });
         };
@@ -129,6 +117,18 @@ $(document).ready(function () {
         hideJumbo();
         pOneAssigned.set(5)
         
+    });
+    firstPlayerName.on('value', function (snap) {
+        $('.usernamePlayerOne').text(snap.val()); 
+    });
+    firstPlayerCry.on('value', function (snap) {
+        $('.battleCryOne').text(snap.val());
+    });
+    secondPlayerName.on('value', function (snap) {
+        $('.usernamePlayerTwo').text(snap.val()); 
+    });
+    secondPlayerCry.on('value', function (snap) {
+        $('.battleCryTwo').text(snap.val());
     });
     // WHEN A PLAYER LEAVES THE GAME RESET THE ASSIGNED VALUE OF THAT PLAYER TO FALSE 
     database.ref("/players/").on("child_removed", function (snap) {
